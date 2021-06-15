@@ -25,8 +25,7 @@ SECRET_KEY = 'ngvobf*%lj$vcxssni_+3++i3^+102)1+bti((97d4m=6c2yd6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 
-ALLOWED_HOSTS = ['ec2-35-178-170-131.eu-west-2.compute.amazonaws.com',
-                '127.0.0.1']
+ALLOWED_HOSTS = []
 
 
 # Application definition
