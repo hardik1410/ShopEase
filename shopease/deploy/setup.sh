@@ -5,7 +5,7 @@ set -e
 # TODO: Set to URL of git repo.
 PROJECT_GIT_URL='https://github.com/hardik1410/ShopEase.git'
 
-PROJECT_BASE_PATH='/usr/local/apps/shopease-backend'
+PROJECT_BASE_PATH='/usr/local/apps/ShopEase'
 
 echo "Installing dependencies..."
 apt-get update
