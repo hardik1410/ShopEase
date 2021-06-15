@@ -10,6 +10,8 @@ PROJECT_BASE_PATH='/usr/local/apps/shopease-backend'
 echo "Installing dependencies..."
 apt-get update
 apt-get install -y python3-dev python3-venv python-pip supervisor nginx git
+apt-get install libmysqlclient-dev
+pip install mysqlclient
 
 # Create project directory
 mkdir -p $PROJECT_BASE_PATH
