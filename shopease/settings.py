@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -76,8 +78,12 @@ WSGI_APPLICATION = 'shopease.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'shopease_db',
+        'USER': 'shopease_admin',
+        'PASSWORD': 'shopease_05',
+        'HOST': 'shopease-db-05.cx26rrsxj5eq.eu-west-2.rds.amazonaws.com',
+        'PORT': '3306',
     }
 }
 
@@ -121,3 +127,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = 'static/'
+
+AUTH_USER_MODEL = 'core.Owner'
