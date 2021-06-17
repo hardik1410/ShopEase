@@ -33,12 +33,12 @@ def getOwnerByEmail(request, email):
         owner = Owner.objects.get(email=email) 
         owner_by_email = OwnerSerializer(owner, many = False)
     except Owner.DoesNotExist: 
-        return JsonResponse({'message': 'The tutorial does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+        return JsonResponse({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
     return Response(owner_by_email.data, status=status.HTTP_200_OK)
  
  
-@api_view(['GET'])
-def getStore(request):
-    store = Store.objects.all()
-    storeList = StoreSerializer(store, many = True)
-    return Response(storeList.data)
+# @api_view(['GET'])
+# def getStore(request):
+#     store = Store.objects.all()
+#     storeList = StoreSerializer(store, many = True)
+#     return Response(storeList.data)
