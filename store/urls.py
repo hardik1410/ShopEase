@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'addStore/', views.addStore),
     url(r'updateStore/', views.updateStore),
     url(r'deleteStore/', views.deleteStore),
+    url(r'getStoreByOwnerId/(?P<ownerId>[0-9]+)$', views.getStoreByOwnerId),
     
 ]

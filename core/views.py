@@ -3,7 +3,8 @@ from .models import Owner,Store
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework import generics, status, views
-from .serializers import EmailVerificationSerializer, RegisterSerializer, LoginSerializer,StoreSerializer,OwnerSerializer
+from .serializers import EmailVerificationSerializer, RegisterSerializer, LoginSerializer
+from store.serializers import OwnerSerializer,StoreSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from .utils import Util
@@ -41,7 +42,7 @@ class RegisterView(generics.GenericAPIView):
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
-def getUser(request):
+def getUser():
     owner = Owner.objects.all()
     ownerList = OwnerSerializer(owner, many = True)
     return Response(ownerList.data)
