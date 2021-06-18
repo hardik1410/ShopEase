@@ -16,7 +16,7 @@ from datetime import date
 def getStore(request):
     store = Store.objects.all()
     #stores = [x for x in store if x.thruDate < date.today()]
-    storeList = StoreSerializer(stores, many = True)
+    storeList = StoreSerializer(store, many = True)
     return Response(storeList.data)
 
 
