@@ -1,11 +1,11 @@
 from django.db.models import expressions
-from core.models import Owner
+from .models import Owner,Store
 from django.shortcuts import render
+from rest_framework.decorators import api_view
 from rest_framework import generics, status, views
-from .serializers import EmailVerificationSerializer, RegisterSerializer, LoginSerializer
+from .serializers import EmailVerificationSerializer, RegisterSerializer, LoginSerializer,StoreSerializer,OwnerSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Owner
 from .utils import Util
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
@@ -40,6 +40,23 @@ class RegisterView(generics.GenericAPIView):
 
         return Response(user_data, status=status.HTTP_201_CREATED)
 
+@api_view(['GET'])
+def getUser(request):
+    owner = Owner.objects.all()
+    ownerList = OwnerSerializer(owner, many = True)
+    return Response(ownerList.data)
+
+ 
+@api_view(['GET'])
+def getOwnerByEmail(request, email):
+    
+    try: 
+        owner = Owner.objects.get(email=email) 
+        owner_by_email = OwnerSerializer(owner, many = False)
+    except Owner.DoesNotExist: 
+        return JsonResponse({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+    return Response(owner_by_email.data, status=status.HTTP_200_OK)
+ 
 
 class VerifyEmail(views.APIView):
     serializer_class = EmailVerificationSerializer
@@ -52,11 +69,11 @@ class VerifyEmail(views.APIView):
 
             user = Owner.objects.get(id=payload['user_id'])
             
-            if user.is_verified:
+            if not user.is_verified:
                 user.is_verified = True
                 user.save()
 
-            return Response({'email': 'Successfull activated'}, status=status.HTTP_200_OK)
+            return Response({'email': 'Successfully verified email and activated account'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
             return Response({'email': 'Activation link expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.DecodeError as identifier:
