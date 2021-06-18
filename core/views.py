@@ -26,14 +26,14 @@ class RegisterView(generics.GenericAPIView):
         user_data = serializer.data
 
         user = Owner.objects.get(email=user_data['email'])
-
+        
         token = RefreshToken.for_user(user).access_token
-
         current_site = get_current_site(self.request)
         relative_link = reverse('email-verify')
-        absurl = 'http://' + str(current_site) + relative_link + '?token=' + str(token) 
+        
+        absurl = 'http://' + str(current_site) + relative_link + '?token=' + str(token)
 
-        email_body = 'Hi ' + user.username + ' user below link to verify your email for shopease store \n' + absurl
+        email_body = 'Hi ' + user.username + ', use below link to verify your email for shopease store \n' + str(absurl)
 
         data = {'email_body': email_body, 'email_subject': 'Verify your email', 'to_email': user.email}
         Util.send_email(data)
@@ -46,20 +46,13 @@ class VerifyEmail(views.APIView):
 
     def get(self, request):
         token = request.GET.get('token')
-        print(token, settings.SECRET_KEY)
-        payload = jwt.decode(token, settings.SECRET_KEY)
-        print('payload', payload)
-        user = Owner.objects.get(id=payload['owner_id'])
-        print('user: ', user)
-        if not user.is_verified:
-            user.is_verified = True
-            user.save()
 
         try:
-            payload = jwt.decode(token, settings.SECRET_KEY)
-            user = Owner.objects.all(id=payload['owner_id'])
-            print('user: ', user)
-            if not user.is_verified:
+            payload = jwt.decode(token, settings.SECRET_KEY, None)
+
+            user = Owner.objects.get(id=payload['user_id'])
+            
+            if user.is_verified:
                 user.is_verified = True
                 user.save()
 
@@ -67,6 +60,7 @@ class VerifyEmail(views.APIView):
         except jwt.ExpiredSignatureError as identifier:
             return Response({'email': 'Activation link expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.DecodeError as identifier:
+            print(identifier)
             return Response({'email': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
 

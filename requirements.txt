@@ -3,5 +3,6 @@ djangorestframework>=3.9.0,<3.10.0
 flake8>=3.6.0,<3.7.0
 mysqlclient
 django-cors-headers
-djangorestframework-simplejwt
+djangorestframework-simplejwt==4.6.0
 environs
+PyJWT==1.7.1
