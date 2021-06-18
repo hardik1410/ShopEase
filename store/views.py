@@ -15,7 +15,7 @@ from datetime import date
 @api_view(['GET'])
 def getStore(request):
     store = Store.objects.all()
-    stores = [x for x in store if x.thruDate < date.today()]
+    #stores = [x for x in store if x.thruDate < date.today()]
     storeList = StoreSerializer(stores, many = True)
     return Response(storeList.data)
 
@@ -28,10 +28,8 @@ def getOwner(ownerId):
 
 @api_view(['GET'])
 def getStoreByOwnerId(request,ownerId):
-
     try:
-        store = Store.objects.get(ownerId = ownerId)
-        
+        store = Store.objects.get(ownerId = ownerId)   
     except: 
         store = None
     store_data = StoreSerializer(store, many = False)
