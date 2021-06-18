@@ -1,9 +1,17 @@
-from django.shortcuts import render
-from rest_framework import generics, status
-from .serializers import RegisterSerializer,OwnerSerializer,StoreSerializer
-from rest_framework.response import Response
+from django.db.models import expressions
 from .models import Owner,Store
+from django.shortcuts import render
 from rest_framework.decorators import api_view
+from rest_framework import generics, status, views
+from .serializers import EmailVerificationSerializer, RegisterSerializer, LoginSerializer,StoreSerializer,OwnerSerializer
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+from .utils import Util
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
+import jwt
+from django.conf import settings
+
 # Create your views here.
 
 class RegisterView(generics.GenericAPIView):
@@ -16,6 +24,19 @@ class RegisterView(generics.GenericAPIView):
         serializer.save()
 
         user_data = serializer.data
+
+        user = Owner.objects.get(email=user_data['email'])
+        
+        token = RefreshToken.for_user(user).access_token
+        current_site = get_current_site(self.request)
+        relative_link = reverse('email-verify')
+        
+        absurl = 'http://' + str(current_site) + relative_link + '?token=' + str(token)
+
+        email_body = 'Hi ' + user.username + ', use below link to verify your email for shopease store \n' + str(absurl)
+
+        data = {'email_body': email_body, 'email_subject': 'Verify your email', 'to_email': user.email}
+        Util.send_email(data)
 
         return Response(user_data, status=status.HTTP_201_CREATED)
 
@@ -36,9 +57,36 @@ def getOwnerByEmail(request, email):
         return JsonResponse({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
     return Response(owner_by_email.data, status=status.HTTP_200_OK)
  
- 
-# @api_view(['GET'])
-# def getStore(request):
-#     store = Store.objects.all()
-#     storeList = StoreSerializer(store, many = True)
-#     return Response(storeList.data)
+
+class VerifyEmail(views.APIView):
+    serializer_class = EmailVerificationSerializer
+
+    def get(self, request):
+        token = request.GET.get('token')
+
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, None)
+
+            user = Owner.objects.get(id=payload['user_id'])
+            
+            if user.is_verified:
+                user.is_verified = True
+                user.save()
+
+            return Response({'email': 'Successfull activated'}, status=status.HTTP_200_OK)
+        except jwt.ExpiredSignatureError as identifier:
+            return Response({'email': 'Activation link expired'}, status=status.HTTP_400_BAD_REQUEST)
+        except jwt.DecodeError as identifier:
+            print(identifier)
+            return Response({'email': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginAPIView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

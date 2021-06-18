@@ -1,11 +1,13 @@
 from django.urls import path
 from django.conf.urls import url 
-from core import views
-from .views import RegisterView, getUser , getOwnerByEmail
+from core import views 
+from .views import RegisterView, VerifyEmail, LoginAPIView,getUser , getOwnerByEmail
+
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
+    path('login/', LoginAPIView.as_view(), name='login'),
+    path('email-verify/', VerifyEmail.as_view(), name='email-verify'),
     url(r'getUser/', views.getUser),
-        url(r'getOwnerByEmail/', views.getOwnerByEmail),
-    
+    url(r'getOwnerByEmail/', views.getOwnerByEmail),
 ]
