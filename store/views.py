@@ -15,7 +15,7 @@ from datetime import date
 @api_view(['GET'])
 def getStore(request):
     store = Store.objects.all()
-    stores = [x for x in store if x.thruDate > date.today()]
+    stores = [x for x in store if x.thruDate < date.today()]
     storeList = StoreSerializer(stores, many = True)
     return Response(storeList.data)
 

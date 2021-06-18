@@ -69,11 +69,11 @@ class VerifyEmail(views.APIView):
 
             user = Owner.objects.get(id=payload['user_id'])
             
-            if user.is_verified:
+            if not user.is_verified:
                 user.is_verified = True
                 user.save()
 
-            return Response({'email': 'Successfull activated'}, status=status.HTTP_200_OK)
+            return Response({'email': 'Successfully verified email and activated account'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
             return Response({'email': 'Activation link expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.DecodeError as identifier:
