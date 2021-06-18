@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Owner,Store
+from .models import Owner
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -23,15 +23,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return Owner.objects.create_user(**validated_data)
 
-class OwnerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Owner
-        fields = '__all__'
-
-class StoreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Store
-        fields = '__all__'
 
 class EmailVerificationSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=555)

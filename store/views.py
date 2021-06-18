@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from core.models import Store,Owner
-from core.serializers import StoreSerializer, OwnerSerializer
+from .serializers import StoreSerializer, OwnerSerializer
 from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -27,10 +27,17 @@ def getOwner(ownerId):
     
 
 @api_view(['GET'])
-def getStoreByOwnerId(ownerId):
-    store = Store.objects.get(ownerId = ownerId)
+def getStoreByOwnerId(request,ownerId):
+
+    try:
+        store = Store.objects.get(ownerId = ownerId)
+        
+    except: 
+        store = None
     store_data = StoreSerializer(store, many = False)
-    return Response(store_data.data)
+    if store:
+        return Response(store_data.data)
+    return Response(store_data.data,status  = status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def addStore(request):
