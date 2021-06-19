@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 from environs import Env
+import datetime
 
 env = Env()
 env.read_env()
@@ -67,6 +68,11 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
+#JWT settings
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=10),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
+}
 
 # Application definition
 
