@@ -3,6 +3,8 @@ from django.conf.urls import url
 from core import views 
 from .views import PasswordTokenCheckAPI, RegisterView, RequestPasswordResetEmail, VerifyEmail, LoginAPIView, \
                     SetNewPasswordAPIView, LogoutAPIView
+from django.conf.urls import url
+from core import views
 from django.conf.urls import include
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -20,4 +22,6 @@ urlpatterns = [
     url(r'getUser/', views.getUser),
     url(r'getOwnerByEmail/', views.getOwnerByEmail),
     path('store/', include('store.urls')),
+    path('product/', include('product.urls')),
+
 ]
