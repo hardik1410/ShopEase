@@ -2,7 +2,9 @@ from django.urls import path
 from django.conf.urls import url 
 from core import views 
 from .views import PasswordTokenCheckAPI, RegisterView, RequestPasswordResetEmail, VerifyEmail, LoginAPIView, \
-                    SetNewPasswordAPIView, LogoutAPIView
+                    SetNewPasswordAPIView, LogoutAPIView, getUser, getOwnerByEmail
+from django.conf.urls import url
+from core import views
 from django.conf.urls import url
 from core import views
 from django.conf.urls import include
@@ -23,5 +25,5 @@ urlpatterns = [
     url(r'getOwnerByEmail/', views.getOwnerByEmail),
     path('store/', include('store.urls')),
     path('product/', include('product.urls')),
-
+    path('category/', include('category.urls')),
 ]
