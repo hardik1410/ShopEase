@@ -13,7 +13,7 @@ apt-get install -y python3-dev python3-venv python-pip libmysqlclient-dev superv
 
 # Create project directory
 mkdir -p $PROJECT_BASE_PATH
-git clone $PROJECT_GIT_URL $PROJECT_BASE_PATH
+git clone --single-branch --branch Development $PROJECT_GIT_URL $PROJECT_BASE_PATH
 
 # Create virtual environment
 mkdir -p $PROJECT_BASE_PATH/env
