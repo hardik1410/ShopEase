@@ -43,7 +43,10 @@ class RegisterView(generics.GenericAPIView):
         current_site = get_current_site(self.request).domain
         relative_link = reverse('email-verify')
         
-        absurl = 'http://' + str(current_site) + relative_link + '?token=' + str(token)
+        # absurl = 'http://' + str(current_site) + relative_link + '?token=' + str(token)
+        print(str(current_site))
+        print(relative_link)
+        absurl = 'http://localhost:3000/' + str(token)
 
         email_body = 'Hi ' + user.username + ', use below link to verify your email for shopease store \n' + str(absurl)
 
@@ -133,7 +136,9 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             current_site = get_current_site(request=request).domain
             relative_link = reverse('password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
             
-            absurl = 'http://' + str(current_site) + relative_link
+            # absurl = 'http://' + str(current_site) + relative_link
+
+            absurl = 'http://localhost:3000/' + relative_link
 
             email_body = 'Hello, \n use below link to reset your password \n' + str(absurl)
 
