@@ -30,7 +30,6 @@ def getStoreByOwnerId(request, ownerId):
 
     try:
         store = Store.objects.get(ownerId=ownerId)
-
     except:
         store = None
     store_data = StoreSerializer(store, many=False)
@@ -42,6 +41,9 @@ def getStoreByOwnerId(request, ownerId):
 @api_view(['POST'])
 def addStore(request):
     store_data = JSONParser().parse(request)
+    store = Store.objects.all()
+    count = len(store) + 1
+    store_data["storeRefId"]= 'STORE-'+str(count)
     store_serializer = StoreSerializer(data=store_data)
     if store_serializer.is_valid():
         store_serializer.save()
@@ -53,19 +55,29 @@ def addStore(request):
 def updateStore(request):
     # ownerId = JSONParser().parse(request)
     # print(request.data)
-    store = Store.objects.get(storeId=request.data["storeId"])
-    store_serializer = StoreSerializer(store, data=request.data)
-    if store_serializer.is_valid():
-        store_serializer.save()
-        return JsonResponse(store_serializer.data)
-    return JsonResponse(store_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    try:
+        store = Store.objects.get(storeId=request.data["storeId"])
+    except:
+        store = None
+    if(store):
+        store_serializer = StoreSerializer(store, data=request.data)
+        if store_serializer.is_valid():
+            store_serializer.save()
+            return JsonResponse(store_serializer.data)
+    return JsonResponse({"error":" No such store exist"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
 def deleteStore(request):
-    store = Store.objects.get(storeId=request.data["storeId"])
-    store.thruDate = date.today()
-    store.save()
-    store_serializer = StoreSerializer(store, many=False)
-    # store_serializer.save()
-    return Response(store_serializer.data)
+    try:
+        store = Store.objects.get(storeId=request.data["storeId"])
+    except:
+        store = None
+    print(store)
+    if(store):
+        store.thruDate = date.today()
+        store.save()
+        store_serializer = StoreSerializer(store, many=False)
+        return Response(store_serializer.data)
+    else:
+        
+        return Response({"error":" No such store exist"},status=status.HTTP_404_NOT_FOUND)

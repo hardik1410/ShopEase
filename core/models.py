@@ -33,7 +33,7 @@ class Owner(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -54,7 +54,7 @@ class Owner(AbstractBaseUser, PermissionsMixin):
 
 
 class Store(models.Model):
-    storeId = models.IntegerField(db_column='StoreId', primary_key=True)
+    storeId = models.AutoField(db_column='StoreId',auto_created=True, primary_key=True)
     storeRefId = models.CharField(max_length=20, db_column='StoreRefId')
     ownerId = models.ForeignKey(Owner, db_column='OwnerId', on_delete=models.CASCADE)
     storeName = models.CharField(db_column='Name',max_length=100)
@@ -75,8 +75,8 @@ class Store(models.Model):
 
 class Category(models.Model):
     storeId = models.ForeignKey(Store, db_column='StoreId', on_delete=models.CASCADE)
-    categoryId = models.IntegerField(db_column='CategoryId', primary_key=True)
-    category_name = models.CharField(db_column='Name',max_length=100)
+    categoryId = models.AutoField(db_column='CategoryId' ,auto_created=True , primary_key=True)
+    category_name = models.CharField(db_column='Name',unique =True,max_length=100)
     description = models.CharField(db_column='Description',max_length=100,null=True)
     rackNumber = models.IntegerField(db_column='RackNumber',null=True)
     fromDate  = models.DateField(db_column='FromDate',null=True)
@@ -88,7 +88,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     storeId = models.ForeignKey(Store, db_column='StoreId', on_delete=models.CASCADE)
-    productId = models.IntegerField(db_column='ProductId', primary_key=True)
+    productId = models.AutoField(db_column='ProductId',auto_created=True , primary_key=True)
     CategoryId = models.ForeignKey(Category, db_column='CategoryId', on_delete=models.CASCADE)
     product_name = models.CharField(db_column='Name',max_length=100)
     description = models.CharField(db_column='Description',max_length=500,null=True)
