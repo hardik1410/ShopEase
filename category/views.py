@@ -27,16 +27,16 @@ def getStore(storeId):
 
 @api_view(['GET'])
 def getCategoryByStoreId(request, storeId):
-
+    z = storeId
     try:
-        category = Category.objects.get(storeId=storeId)
-
+        category = Category.objects.filter(storeId=z)
     except:
         category = None
-    category_data = CategorySerializer(category, many=False)
+    categoryList = [x for x in category if x.thruDate > date.today()]
+    category_serializer = CategorySerializer(categoryList, many=True)
     if category:
-        return Response(category_data.data)
-    return Response(category_data.data, status=status.HTTP_404_NOT_FOUND)
+        return Response(category_serializer.data)
+    return Response(category_serializer.data, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -67,7 +67,10 @@ def deleteCategory(request, categoryId):
     except:
         category = None
     if(category):
-        category.delete()
+        category.thruDate = date.today()
+        category.save()
+        #category_serializer = CategorySerializer(category, many=False)
+        # product_serializer.save()
         return Response({"message": "Deleted Category Successfully !"})
     else:
         return Response({"message": "No such category exist"}, status=status.HTTP_400_BAD_REQUEST)
