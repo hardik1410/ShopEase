@@ -7,7 +7,7 @@ urlpatterns = [
     url(r'getProduct/', views.getProduct),
     url(r'addProduct/', views.addProduct),
     url(r'updateProduct/', views.updateProduct),
-    url(r'deleteProduct/', views.deleteProduct),
+    url(r'deleteProduct/(?P<productId>[0-9]+)$', views.deleteProduct),
     url(r'getProductByStoreId/(?P<storeId>[0-9]+)$',
         views.getProductByStoreId),
     url(r'getProductByCategoryId/(?P<categoryId>[0-9]+)$',

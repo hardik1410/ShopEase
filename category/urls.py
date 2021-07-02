@@ -7,8 +7,7 @@ urlpatterns = [
     url(r'getCategory/', views.getCategory),
     url(r'addCategory/', views.addCategory),
     url(r'updateCategory/', views.updateCategory),
-    url(r'deleteCategory/', views.deleteCategory),
+    url(r'deleteCategory/(?P<categoryId>[0-9]+)$', views.deleteCategory),
     url(r'getCategoryByStoreId/(?P<storeId>[0-9]+)$',
         views.getCategoryByStoreId),
-
 ]

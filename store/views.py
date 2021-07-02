@@ -12,10 +12,12 @@ from datetime import date
 
 # Create your views here.
 
+
 @api_view(['GET'])
 def getStore(request):
     store = Store.objects.all()
-    storeList = StoreSerializer(store, many = True)
+    stores = [x for x in store if x.thruDate > date.today()]
+    storeList = StoreSerializer(stores, many=True)
     return Response(storeList.data)
 
 
@@ -43,7 +45,7 @@ def addStore(request):
     store_data = JSONParser().parse(request)
     store = Store.objects.all()
     count = len(store) + 1
-    store_data["storeRefId"]= 'STORE-'+str(count)
+    store_data["storeRefId"] = 'STORE-'+str(count)
     store_serializer = StoreSerializer(data=store_data)
     if store_serializer.is_valid():
         store_serializer.save()
@@ -64,7 +66,8 @@ def updateStore(request):
         if store_serializer.is_valid():
             store_serializer.save()
             return JsonResponse(store_serializer.data)
-    return JsonResponse({"error":" No such store exist"}, status=status.HTTP_400_BAD_REQUEST)
+    return JsonResponse({"error": " No such store exist"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['DELETE'])
 def deleteStore(request):
@@ -79,5 +82,5 @@ def deleteStore(request):
         store_serializer = StoreSerializer(store, many=False)
         return Response(store_serializer.data)
     else:
-        
-        return Response({"error":" No such store exist"},status=status.HTTP_404_NOT_FOUND)
+
+        return Response({"error": " No such store exist"}, status=status.HTTP_404_NOT_FOUND)
