@@ -180,14 +180,9 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
 
 
 class LogoutAPIView(generics.GenericAPIView):
-    serializer_class = LogoutSerializer
-
-    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
-
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        token = RefreshToken(request.data['refresh'])
+        token.blacklist()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
