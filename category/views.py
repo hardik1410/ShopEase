@@ -42,6 +42,7 @@ def getCategoryByStoreId(request, storeId):
 @api_view(['POST'])
 def addCategory(request):
     category_data = JSONParser().parse(request)
+    category_data["thruDate"] = '2099-01-01'
     category_serializer = CategorySerializer(data=category_data)
     if category_serializer.is_valid():
         category_serializer.save()
