@@ -46,6 +46,7 @@ def addStore(request):
     store = Store.objects.all()
     count = len(store) + 1
     store_data["storeRefId"] = 'STORE-'+str(count)
+    store_data["thruDate"] = '2099-01-01'
     store_serializer = StoreSerializer(data=store_data)
     if store_serializer.is_valid():
         store_serializer.save()
