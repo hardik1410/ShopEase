@@ -63,10 +63,10 @@ def getUser():
 
  
 @api_view(['GET'])
-def getOwnerByEmail(request, email):
+def getOwnerByEmail(request):
     
     try: 
-        owner = Owner.objects.get(email=email) 
+        owner = Owner.objects.get(email=request.data['email']) 
         owner_by_email = OwnerSerializer(owner, many = False)
     except Owner.DoesNotExist: 
         return JsonResponse({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
@@ -138,7 +138,8 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             
             # absurl = 'http://' + str(current_site) + relative_link
 
-            absurl = 'http://localhost:3000/' + relative_link
+            absurl = 'http://localhost:3000' + relative_link
+            print(relative_link)
 
             email_body = 'Hello, \n use below link to reset your password \n' + str(absurl)
 
@@ -160,13 +161,13 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
 
 
             if not PasswordResetTokenGenerator().check_token(user, token):
-                return Response({'error': 'Token is not valid, please request a new one.'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'success': False,'message': 'Token is not valid, please request a new one.'}, status=status.HTTP_401_UNAUTHORIZED)
 
             return Response({'success': True, 'message': 'Credentials', 'uidb64': uidb64, 'token': token}, status=status.HTTP_200_OK)
 
         except DjangoUnicodeDecodeError as identifier:
             if not PasswordResetTokenGenerator.check_token(user):
-                return Response({'error': 'Token is not valid, please request a new one.'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'success': False,'message':'Token is not valid, please request a new one.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class SetNewPasswordAPIView(generics.GenericAPIView):
@@ -175,7 +176,7 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
     def patch(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
+        return Response({'success': True, 'message': 'Password reset successfully.'}, status=status.HTTP_200_OK)
 
 
 class LogoutAPIView(generics.GenericAPIView):
