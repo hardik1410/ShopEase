@@ -42,6 +42,7 @@ def getCategoryByStoreId(request, storeId):
 @api_view(['POST'])
 def addCategory(request):
     category_data = JSONParser().parse(request)
+    category_data["thruDate"] = '2099-01-01'
     category_serializer = CategorySerializer(data=category_data)
     if category_serializer.is_valid():
         category_serializer.save()
@@ -60,9 +61,13 @@ def updateCategory(request):
 
 
 @api_view(['DELETE'])
-def deleteCategory(request):
-    category = Category.objects.get(categoryId=request.data["categoryId"])
-    category.thruDate = date.today()
-    category.save()
-    category_serializer = CategorySerializer(category, many=False)
-    return Response(category_serializer.data)
+def deleteCategory(request, categoryId):
+    try:
+        category = Category.objects.get(categoryId=int(categoryId))
+    except:
+        category = None
+    if(category):
+        category.delete()
+        return Response({"message": "Deleted Category Successfully !"})
+    else:
+        return Response({"message": "No such category exist"}, status=status.HTTP_400_BAD_REQUEST)

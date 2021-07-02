@@ -16,7 +16,8 @@ from datetime import date
 @api_view(['GET'])
 def getProduct(request):
     product = Product.objects.all()
-    productList = ProductSerializer(product, many=True)
+    products = [x for x in product if x.thruDate > date.today()]
+    productList = ProductSerializer(products, many=True)
     return Response(productList.data)
 
 
@@ -36,10 +37,8 @@ def getCategory(categoryId):
 
 @api_view(['GET'])
 def getProductByStoreId(request, storeId):
-
     try:
         product = Product.objects.get(storeId=storeId)
-
     except:
         product = None
     product_data = ProductSerializer(product, many=False)
@@ -50,10 +49,8 @@ def getProductByStoreId(request, storeId):
 
 @api_view(['GET'])
 def getProductByCategoryId(request, categoryId):
-
     try:
         product = Product.objects.get(categoryId=categoryId)
-
     except:
         product = None
     product_data = ProductSerializer(product, many=False)
@@ -65,6 +62,7 @@ def getProductByCategoryId(request, categoryId):
 @api_view(['POST'])
 def addProduct(request):
     product_data = JSONParser().parse(request)
+    product_data["thruDate"] = "2099-01-01"
     product_serializer = ProductSerializer(data=product_data)
     if product_serializer.is_valid():
         product_serializer.save()
@@ -83,10 +81,16 @@ def updateProduct(request):
 
 
 @api_view(['DELETE'])
-def deleteProduct(request):
-    product = Product.objects.get(productId=request.data["productId"])
-    product.thruDate = date.today()
-    product.save()
-    product_serializer = ProductSerializer(product, many=False)
-    # product_serializer.save()
-    return Response(product_serializer.data)
+def deleteProduct(request, productId):
+    try:
+        product = Product.objects.get(productId=productId)
+    except:
+        product = None
+    if(product):
+        product.thruDate = date.today()
+        product.save()
+        product_serializer = ProductSerializer(product, many=False)
+        # product_serializer.save()
+        return Response(product_serializer.data)
+    else:
+        return Response({"message": "Error"})
