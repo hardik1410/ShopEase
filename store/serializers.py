@@ -4,7 +4,7 @@ from core.models import Owner,Store
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Owner
-        fields = ['firstname', 'lastname', 'username', 'email']
+        fields = '__all__'
 
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:

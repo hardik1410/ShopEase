@@ -43,10 +43,7 @@ class RegisterView(generics.GenericAPIView):
         current_site = get_current_site(self.request).domain
         relative_link = reverse('email-verify')
         
-        # absurl = 'http://' + str(current_site) + relative_link + '?token=' + str(token)
-        print(str(current_site))
-        print(relative_link)
-        absurl = 'http://localhost:3000/' + str(token)
+        absurl = 'http://' + str(current_site) + relative_link + '?token=' + str(token)
 
         email_body = 'Hi ' + user.username + ', use below link to verify your email for shopease store \n' + str(absurl)
 
@@ -63,7 +60,7 @@ def getUser():
 
  
 @api_view(['GET'])
-def getOwnerByEmail(request):
+def getOwnerByEmail(request, email):
     
     try: 
         owner = Owner.objects.get(email=request.query_params.get('email'))
@@ -136,10 +133,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             current_site = get_current_site(request=request).domain
             relative_link = reverse('password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
             
-            # absurl = 'http://' + str(current_site) + relative_link
-
-            absurl = 'http://localhost:3000' + relative_link
-            print(relative_link)
+            absurl = 'http://' + str(current_site) + relative_link
 
             email_body = 'Hello, \n use below link to reset your password \n' + str(absurl)
 
@@ -161,13 +155,13 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
 
 
             if not PasswordResetTokenGenerator().check_token(user, token):
-                return Response({'success': False,'message': 'Token is not valid, please request a new one.'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': 'Token is not valid, please request a new one.'}, status=status.HTTP_401_UNAUTHORIZED)
 
             return Response({'success': True, 'message': 'Credentials', 'uidb64': uidb64, 'token': token}, status=status.HTTP_200_OK)
 
         except DjangoUnicodeDecodeError as identifier:
             if not PasswordResetTokenGenerator.check_token(user):
-                return Response({'success': False,'message':'Token is not valid, please request a new one.'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': 'Token is not valid, please request a new one.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class SetNewPasswordAPIView(generics.GenericAPIView):
@@ -176,13 +170,18 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
     def patch(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        return Response({'success': True, 'message': 'Password reset successfully.'}, status=status.HTTP_200_OK)
+        return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
 
 
 class LogoutAPIView(generics.GenericAPIView):
+    serializer_class = LogoutSerializer
+
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
-        token = RefreshToken(request.data['refresh'])
-        token.blacklist()
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
