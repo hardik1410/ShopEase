@@ -91,11 +91,11 @@ class Category(models.Model):
 class Product(models.Model):
     storeId = models.ForeignKey(Store, db_column='StoreId', on_delete=models.CASCADE)
     productId = models.AutoField(db_column='ProductId',auto_created=True , primary_key=True)
-    CategoryId = models.ForeignKey(Category, db_column='CategoryId', on_delete=models.CASCADE)
+    categoryId = models.ForeignKey(Category, db_column='CategoryId', on_delete=models.CASCADE)
     product_name = models.CharField(db_column='Name',max_length=100)
     description = models.CharField(db_column='Description',max_length=500,null=True)
     quantity = models.IntegerField(db_column='Quantity',null=True)
-    price = models.DecimalField(db_column='Price',max_digits=5, decimal_places=2,null=True)
+    price = models.DecimalField(db_column='Price',max_digits=7, decimal_places=2,null=True)
     discount =  models.DecimalField(db_column='Discount',max_digits=3, decimal_places=2,null=True)
     #images = models.ImageField(db_column='Images',null=True)
     company = models.CharField(db_column='Company',max_length=100,null=True)
@@ -106,3 +106,4 @@ class Product(models.Model):
     created  = models.DateField(db_column='Created',null=True)
     modifier = models.CharField(db_column='Modifier',max_length=30,null=True)
     modified  = models.DateField(db_column='Modified',null=True)
+    

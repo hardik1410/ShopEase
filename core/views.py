@@ -66,7 +66,7 @@ def getUser():
 def getOwnerByEmail(request):
     
     try: 
-        owner = Owner.objects.get(email=request.data['email']) 
+        owner = Owner.objects.get(email=request.query_params.get('email'))
         owner_by_email = OwnerSerializer(owner, many = False)
     except Owner.DoesNotExist: 
         return JsonResponse({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
