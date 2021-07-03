@@ -46,7 +46,7 @@ def getProductByStoreId(request, storeId):
     product_data = ProductSerializer(productList, many=True)
     if product:
         return Response(product_data.data)
-    return Response(product_data.data, status=status.HTTP_404_NOT_FOUND)
+    return Response({"message": "No products exist."}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
@@ -91,6 +91,6 @@ def deleteProduct(request, productId):
     if(product):
         product.thruDate = date.today()
         product.save()
-        return Response({"message": "Deleted Category Successfully !"})
+        return Response({"message": "Deleted Product Successfully !"})
     else:
-        return Response({"message": "No such category exist"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "No such product exist"}, status=status.HTTP_400_BAD_REQUEST)
