@@ -36,7 +36,7 @@ def getCategoryByStoreId(request, storeId):
     category_serializer = CategorySerializer(categoryList, many=True)
     if category:
         return Response(category_serializer.data)
-    return Response(category_serializer.data, status=status.HTTP_404_NOT_FOUND)
+    return Response({"message": "No category exist."}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])

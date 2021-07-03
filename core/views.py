@@ -39,7 +39,7 @@ class RegisterView(generics.GenericAPIView):
         # absurl = 'http://' + str(current_site) + relative_link + '?token=' + str(token)
         print(str(current_site))
         print(relative_link)
-        absurl = 'http://localhost:3000/' + str(token)
+        absurl = 'http://localhost:3000/'+ 'email-verify/' + str(token)
 
         email_body = 'Hi ' + user.username + ', use below link to verify your email for shopease store \n' + str(absurl)
 
