@@ -38,15 +38,18 @@ ALLOWED_HOSTS = ['ec2-52-56-96-88.eu-west-2.compute.amazonaws.com',
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:3000',
+    'http://shopease-store.surge.sh/',
 ] # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://127.0.0.1:3000',
+    'http://shopease-store.surge.sh/',
 ]
 
 CORS_ALLOWED_ORIGINS = [
    
     "http://localhost:3000",
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    'http://shopease-store.surge.sh',
 ]
 CORS_ALLOW_METHODS = [
     'DELETE',
