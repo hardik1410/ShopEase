@@ -21,6 +21,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .utils import Util
 from core import serializers
+import config
 # Create your views here.
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -39,7 +40,8 @@ class RegisterView(generics.GenericAPIView):
         # absurl = 'http://' + str(current_site) + relative_link + '?token=' + str(token)
         print(str(current_site))
         print(relative_link)
-        absurl = 'http://localhost:3000/'+ 'email-verify/' + str(token)
+
+        absurl = config.host_url_store + '/email-verify/' + str(token)
 
         email_body = 'Hi ' + user.username + ', use below link to verify your email for shopease store \n' + str(absurl)
 
@@ -116,7 +118,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
 
             # absurl = 'http://' + str(current_site) + relative_link
 
-            absurl = 'http://localhost:3000' + relative_link
+            absurl = config.host_url_store + relative_link
             print(relative_link)
 
             email_body = 'Hello, \n use below link to reset your password \n' + str(absurl)
@@ -126,6 +128,8 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
         
         return Response({'failure': 'This email does not exist.'}, status=status.HTTP_200_OK)
+
+
 class PasswordTokenCheckAPI(generics.GenericAPIView):
     def get(self, request, uidb64, token):
         
