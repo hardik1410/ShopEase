@@ -78,7 +78,7 @@ class Store(models.Model):
 class Category(models.Model):
     storeId = models.ForeignKey(Store, db_column='StoreId', on_delete=models.CASCADE)
     categoryId = models.AutoField(db_column='CategoryId' ,auto_created=True , primary_key=True)
-    category_name = models.CharField(db_column='Name',unique =True,max_length=100)
+    category_name = models.CharField(db_column='Name', max_length=100)
     description = models.CharField(db_column='Description',max_length=100,null=True)
     rackNumber = models.IntegerField(db_column='RackNumber',null=True)
     fromDate  = models.DateField(db_column='FromDate',null=True)
