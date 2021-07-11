@@ -1,11 +1,13 @@
 from os import stat
 from django.db.models import expressions
-from .models import Owner,Store
+from django.http.response import JsonResponse
+from django.http import HttpResponse
+from .models import Owner, Store, ProductImage
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework import generics, status, views, permissions
 from .serializers import EmailVerificationSerializer, RegisterSerializer, LoginSerializer, RequestPasswordResetEmailSerializer, \
-                        SetNewPasswordSerializer, LogoutSerializer
+                        SetNewPasswordSerializer, LogoutSerializer, MyFileSerializer, ImageDownloadSerializer
 from store.serializers import OwnerSerializer,StoreSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -22,6 +24,7 @@ from django.urls import reverse
 from .utils import Util
 from core import serializers
 import config
+from rest_framework.parsers import MultiPartParser, FormParser
 # Create your views here.
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -163,3 +166,30 @@ class LogoutAPIView(generics.GenericAPIView):
         token.blacklist()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ImageUpload(generics.GenericAPIView):
+
+    parser_classes = (MultiPartParser, FormParser)
+    def post(self, request, *args, **kwargs):
+            file_serializer = MyFileSerializer(data=request.data)
+            if file_serializer.is_valid():
+                    file_serializer.save()
+                    return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                    return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ImageDownload(generics.GenericAPIView):
+
+    def get(self, request, imageId):
+        print(imageId)
+        image = ProductImage.objects.get(imageId=int(imageId))
+
+        # image_serializer = self.serializer_class(data=image)
+
+        # if image_serializer.is_valid():
+        #     return JsonResponse(image)
+
+        return HttpResponse(image.imagePath, content_type="image/png")
+

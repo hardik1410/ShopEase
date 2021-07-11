@@ -1,5 +1,6 @@
+from django.db.models.fields import CharField
 from rest_framework import serializers
-from .models import Owner
+from .models import Owner, ProductImage
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from django.utils.encoding import force_str
@@ -136,3 +137,15 @@ class LogoutSerializer(serializers.Serializer):
 
         except TokenError:
             self.fail('bad_token')
+
+class MyFileSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ProductImage
+        fields = ['imagePath',]
+
+class ImageDownloadSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductImage
+        fields = ['imagePath',]

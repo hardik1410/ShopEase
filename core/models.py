@@ -31,11 +31,14 @@ class UserManager(BaseUserManager):
 class Owner(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=25, unique=True, db_index=True)
     email = models.EmailField(unique=True)
-    firstname = models.CharField(max_length=25, null=True)
-    lastname = models.CharField(max_length=25, null=True)
+    # firstname = models.CharField(max_length=25, null=True)
+    # lastname = models.CharField(max_length=25, null=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
+    is_customer = models.BooleanField(default=False)
+    allergicIngredients = models.CharField(db_column='AllergicIngredients',max_length=500,null=True)
+    contact = models.CharField(max_length=12, db_column='CustomerContact',blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -106,4 +109,48 @@ class Product(models.Model):
     created  = models.DateField(db_column='Created',null=True)
     modifier = models.CharField(db_column='Modifier',max_length=30,null=True)
     modified  = models.DateField(db_column='Modified',null=True)
-    
+
+
+class ProductImage(models.Model):
+    imageId = models.AutoField(db_column="ImageId", auto_created=True, primary_key=True)
+    imagePath = models.ImageField(upload_to='images')
+
+    # def __str__(self):
+    #     return self.imagePath
+
+
+class Order(models.Model):
+    CHOICES = (
+        ('M', 'Multiple'),
+        ('S', 'Single'),
+    )
+
+    CHOICES_STATUS = (
+        ('A', 'Approved'),
+        ('R', 'Ready'),
+        ('P', 'Preparing'),
+        ('C', 'Cancelled'),
+        ('D', 'Disapproved')
+    )
+
+    orderId = models.AutoField(db_column='OrderId', primary_key=True)
+    customerId = models.ForeignKey(Owner, db_column='CustomerId', on_delete=models.CASCADE)
+    orderDate = models.DateTimeField(db_column="OrderDate")
+    orderType = models.CharField(db_column="OrderType", choices=CHOICES, null=True, max_length=15)
+    OrderAmount = models.DecimalField(db_column="OrderAmount", max_digits=7, decimal_places=2)
+    status = models.CharField(db_column="OrderStatus", choices=CHOICES_STATUS, null=True, max_length=15)
+    paid = models.BooleanField(db_column="IsPaid", default=False)
+    fromDate  = models.DateField(db_column='FromDate',null=True)
+    thruDate =  models.DateField(db_column='ThruDate',null=True)
+    creator = models.CharField(db_column='Creator',max_length=30,null=True)
+    created  = models.DateField(db_column='Created',null=True)
+    modifier = models.CharField(db_column='Modifier',max_length=30,null=True)
+    modified  = models.DateField(db_column='Modified',null=True)
+
+
+class OrderProduct(models.Model):
+    productId = models.IntegerField(db_column="ProductId")
+    storeId = models.IntegerField(db_column="StoreId")
+    orderId = models.IntegerField(db_column="OrderId")
+    quantity = models.IntegerField(db_column="Quantity")
+    amount = models.DecimalField(db_column="Amount", max_digits=7, decimal_places=2)
