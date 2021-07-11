@@ -1,8 +1,8 @@
 from django.urls import path
 from django.conf.urls import url 
 from core import views 
-from .views import PasswordTokenCheckAPI, RegisterView, RequestPasswordResetEmail, VerifyEmail, LoginAPIView, \
-                    SetNewPasswordAPIView, LogoutAPIView, getUser, getOwnerByEmail
+from .views import  PasswordTokenCheckAPI, RegisterView, RequestPasswordResetEmail, VerifyEmail, LoginAPIView, \
+                    SetNewPasswordAPIView, LogoutAPIView, getUser, getOwnerByEmail, ImageUpload, ImageDownload
 from django.conf.urls import url
 from core import views
 from django.conf.urls import url
@@ -26,4 +26,6 @@ urlpatterns = [
     path('store/', include('store.urls')),
     path('product/', include('product.urls')),
     path('category/', include('category.urls')),
+    url(r'^upload/$', ImageUpload.as_view(), name='file-upload'),
+    url(r'download/(?P<imageId>[0-9]+)$', ImageDownload.as_view(), name='file-download'),
 ]
