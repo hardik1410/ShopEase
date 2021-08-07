@@ -142,7 +142,7 @@ class MyFileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ProductImage
-        fields = ['imagePath',]
+        fields = ['imagePath', 'productId']
 
 class ImageDownloadSerializer(serializers.ModelSerializer):
 

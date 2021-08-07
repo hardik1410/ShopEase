@@ -182,9 +182,9 @@ class ImageUpload(generics.GenericAPIView):
 
 class ImageDownload(generics.GenericAPIView):
 
-    def get(self, request, imageId):
-        print(imageId)
-        image = ProductImage.objects.get(imageId=int(imageId))
+    def get(self, request, productId):
+        print(productId)
+        image = ProductImage.objects.get(productId=int(productId))
 
         # image_serializer = self.serializer_class(data=image)
 

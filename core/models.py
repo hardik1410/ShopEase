@@ -114,6 +114,7 @@ class Product(models.Model):
 class ProductImage(models.Model):
     imageId = models.AutoField(db_column="ImageId", auto_created=True, primary_key=True)
     imagePath = models.ImageField(upload_to='images')
+    productId = models.IntegerField(db_column='productId', unique=True, null=True)
 
     # def __str__(self):
     #     return self.imagePath

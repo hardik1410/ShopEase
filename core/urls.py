@@ -27,5 +27,5 @@ urlpatterns = [
     path('product/', include('product.urls')),
     path('category/', include('category.urls')),
     url(r'^upload/$', ImageUpload.as_view(), name='file-upload'),
-    url(r'download/(?P<imageId>[0-9]+)$', ImageDownload.as_view(), name='file-download'),
+    url(r'download/(?P<productId>[0-9]+)$', ImageDownload.as_view(), name='file-download'),
 ]
