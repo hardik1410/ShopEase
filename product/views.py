@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from core.models import Product, Category, Store
-from .serializers import ProductSerializer, CategorySerializer, StoreSerializer
+from core.models import Product, Category, Store, Order, OrderProduct
+from .serializers import ProductSerializer, CategorySerializer, StoreSerializer, OrderSerializer, OrderProductSerializer
 from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -94,3 +94,49 @@ def deleteProduct(request, productId):
         return Response({"message": "Deleted Product Successfully !"})
     else:
         return Response({"message": "No such product exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def getOrders(request):
+    try:
+        order = Order.objects.get(customerId=81)
+    except:
+        order = None
+
+    orders = OrderSerializer(order, many=False)
+
+    products = OrderProduct.objects.filter(orderId=orders.data['orderId'])
+
+    all_products = OrderProductSerializer(products, many = True)
+
+    print(all_products.data)
+
+    res = orders.data.copy()
+
+    res['products'] = all_products.data
+    print(res)
+    if orders:
+        return Response(res)
+
+    return Response({"message": "No orders exist for this customer."}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def placeOrder(request):
+    
+    flag  = 0
+    for product in request.data['products']:
+        product_serializer = OrderProductSerializer(data=product)
+
+        if product_serializer.is_valid():
+            product_serializer.save()
+            flag = 1
+        else:
+            flag = 0
+            break
+
+    if flag == 1:
+        return Response({'message': "order is placed."})
+
+    
+    print(product_serializer.errors)
+
+    return Response({'message': "order is not placed."})

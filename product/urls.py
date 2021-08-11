@@ -12,5 +12,6 @@ urlpatterns = [
         views.getProductByStoreId),
     url(r'getProductByCategoryId/(?P<categoryId>[0-9]+)$',
         views.getProductByCategoryId),
-
+    url(r'getOrders/', views.getOrders),
+    url(r'placeOrder', views.placeOrder),
 ]
