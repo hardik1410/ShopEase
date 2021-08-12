@@ -19,12 +19,22 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
+
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
 
+
 class OrderProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderProduct
         fields = '__all__'
+
+
+class OrderPSerializer(serializers.ModelSerializer):
+    products = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        model = Order
+        fields = ['orderId', 'products']
