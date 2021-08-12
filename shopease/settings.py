@@ -93,7 +93,6 @@ INSTALLED_APPS = [
     'product',
     'category',
     'rest_framework_simplejwt.token_blacklist',
-    'sslserver',
 ]
 
 MIDDLEWARE = [
