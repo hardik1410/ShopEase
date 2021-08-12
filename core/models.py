@@ -33,8 +33,8 @@ class UserManager(BaseUserManager):
 class Owner(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=25, unique=True, db_index=True)
     email = models.EmailField(unique=True)
-    # firstname = models.CharField(max_length=25, null=True)
-    # lastname = models.CharField(max_length=25, null=True)
+    firstname = models.CharField(max_length=25, null=True)
+    lastname = models.CharField(max_length=25, null=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
