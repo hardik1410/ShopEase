@@ -30,8 +30,7 @@ SECRET_KEY = 'mhuo_1r@j(o*izb#ef@7i^ehl(mdrg)eh!+12y*6_8nj_&8vf2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = bool(int(os.environ.get('DEBUG', 1)))
-DEBUG = True
-
+DEBUG = 1
 ALLOWED_HOSTS = ['ec2-52-56-96-88.eu-west-2.compute.amazonaws.com',
                 '127.0.0.1']
 
@@ -39,15 +38,18 @@ ALLOWED_HOSTS = ['ec2-52-56-96-88.eu-west-2.compute.amazonaws.com',
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:3000',
+    'http://shopease-store.surge.sh/',
 ] # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://127.0.0.1:3000',
+    'http://shopease-store.surge.sh/',
 ]
 
 CORS_ALLOWED_ORIGINS = [
    
     "http://localhost:3000",
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    'http://shopease-store.surge.sh',
 ]
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -71,7 +73,7 @@ CORS_ALLOW_HEADERS = [
 
 #JWT settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=10),
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=90),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
 }
 
@@ -90,6 +92,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'product',
     'category',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -197,3 +200,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+# Base url to serve media files
+MEDIA_URL = '/media/'
+
+# Path where media is stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

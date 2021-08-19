@@ -1,5 +1,6 @@
+from django.db.models.fields import CharField
 from rest_framework import serializers
-from .models import Owner
+from .models import Owner, ProductImage
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from django.utils.encoding import force_str
@@ -12,11 +13,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Owner
-        fields = ['email', 'username', 'password']
+        fields = ['email', 'firstname', 'lastname', 'username', 'password']
 
     def validate(self, attrs):
         email = attrs.get('email', '')
         username = attrs.get('username', '')
+        firstname = attrs.get('firstname', '')
+        lastname = attrs.get('lastname', '')
 
         if not username.isalnum():
             raise serializers.ValidationError(
@@ -134,3 +137,15 @@ class LogoutSerializer(serializers.Serializer):
 
         except TokenError:
             self.fail('bad_token')
+
+class MyFileSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ProductImage
+        fields = ['imagePath', 'productId']
+
+class ImageDownloadSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductImage
+        fields = ['imagePath',]

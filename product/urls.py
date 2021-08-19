@@ -5,6 +5,7 @@ from .views import getProduct, addProduct, updateProduct, deleteProduct
 
 urlpatterns = [
     url(r'getProduct/', views.getProduct),
+    url(r'getAllOrdersByProduct/', views.getAllOrdersByProduct),
     url(r'addProduct/', views.addProduct),
     url(r'updateProduct/', views.updateProduct),
     url(r'deleteProduct/(?P<productId>[0-9]+)$', views.deleteProduct),
@@ -12,5 +13,7 @@ urlpatterns = [
         views.getProductByStoreId),
     url(r'getProductByCategoryId/(?P<categoryId>[0-9]+)$',
         views.getProductByCategoryId),
-
+    url(r'getOrders/', views.getOrders),
+    url(r'placeOrder', views.placeOrder),
+    url(r'getOrderByStoreId/(?P<storeId>[0-9]+)$', views.getOrderByStoreId),
 ]
